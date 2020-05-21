@@ -1,0 +1,37 @@
+{
+  "name": "pets-home-back",
+  "version": "1.0.0",
+  "description": "PWr W8 ZPI project for letting people to find pets for adoption and pets to find home. Back end server.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/misiurina/pets-home-back.git"
+  },
+  "keywords": [
+    "PWr",
+    "Politechnika Wrocławska",
+    "Wroclaw University of Science and Technology",
+    "WUST",
+    "WIZ",
+    "Wydział Informatyki i Zarządzania",
+    "W8",
+    "ZPI",
+    "Zespołowe Przedsięwzięcie Inżynierskie",
+    "Misiuryna",
+    "Lukuts",
+    "Bakunovskyi",
+    "Kovtyk",
+    "Portal adopcyjny dla bezdomnych zwierząt",
+    "Pets Home",
+    "Back end service"
+  ],
+  "author": "Aliaksandr Misiuryna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/misiurina/pets-home-back/issues"
+  },
+  "homepage": "https://github.com/misiurina/pets-home-back#readme"
+}
