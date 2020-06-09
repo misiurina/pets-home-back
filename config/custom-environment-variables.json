@@ -1,0 +1,6 @@
+{
+    "mysqldb": {
+        "password": "ZPI_mysqlPassword"
+    },
+    "jwtPrivateKey": "ZPI_jwtPrivateKey"
+}

@@ -13,6 +13,7 @@ POST = {
     },
     response: {
         body: {
+            id: "Integer",
             name: "String",
             email: "String"
         }
@@ -51,7 +52,7 @@ POST = {
             instagram: "String",
             telegram: "String",
             city: "String",
-            address: "String",
+            address: "String"
         }
     },
     errors: {
@@ -522,7 +523,7 @@ DELETE = {
 //WYSZUKIWANIE OGŁOSZEŃ
 GET = {
     request: {
-        uri: "zpi/api/advertisments",
+        uri: "zpi/api/advertisment",
         headers: {
             "x-auth-token": "JWT"
         }
@@ -534,7 +535,7 @@ GET = {
 
 GET = {
     request: {
-        uri: "zpi/api/advertisments?query",
+        uri: "zpi/api/advertisment?query",
         headers: {
             "x-auth-token": "JWT"
         }

@@ -1,0 +1,8 @@
+{
+    "mysqldb": {
+        "host": "77.55.221.84",
+        "user": "ZPI",
+        "password": "",
+        "database": "pets_home"
+    }
+}
