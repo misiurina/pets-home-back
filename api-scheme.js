@@ -551,6 +551,14 @@ GET = {
         uri: "zpi/api/cities"
     },
     response: {
+        body: "String"
+    }
+}
+GET = {
+    request: {
+        uri: "zpi/api/cities/:id"
+    },
+    response: {
         body: "String[]"
     }
 }

@@ -10,6 +10,7 @@ const user = require('./routes/user');
 const advertisement = require('./routes/advertisement');
 const violation = require('./routes/violation');
 const bookmarks = require('./routes/bookmarks');
+const cities = require('./routes/cities');
 
 const app = express();
 app.use(cors({
@@ -28,6 +29,7 @@ app.use('/zpi/api/user', user);
 app.use('/zpi/api/advertisement', advertisement);
 //app.use('/zpi/api/violation', violation);
 //app.use('/zpi/api/bookmarks', bookmarks);
+app.use('/zpi/api/cities', cities);
 
 if (!config.get('mysqldb.password') || !config.get('jwtPrivateKey')) {
     console.error('FATAL ERROR: Environment Variables are not configured.')
