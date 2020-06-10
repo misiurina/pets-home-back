@@ -148,7 +148,7 @@ PUT = {
 }
 DELETE = {
     request: {
-        uri: "zpi/api/user/:id",
+        uri: "zpi/api/user/me",
         headers: {
             "Content-Type": "application/json",
             "x-auth-token": "JWT"

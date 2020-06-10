@@ -90,7 +90,7 @@ async function selectAdvertisement(id) {
         "publisher_id": ad.PublisherID,
         "modified_date": ad.ModifiedDate,
         "due_date": ad.DueDate,
-        "is_active": (ad[i].ActiveStatus == 1),
+        "is_active": (ad.ActiveStatus == 1),
         "photos": photos
     };
 }
@@ -131,7 +131,57 @@ async function selectAdvertisements() {
             "parasites": ad[i].Parasites,
             "health_status": ad[i].HealthStatus,
             "illness_description": ad[i].IllnessDescription,
-            "behavioral_disorders": (ad.BehavioralDisorders == 1),
+            "behavioral_disorders": (ad[i].BehavioralDisorders == 1),
+            "behavioral_disorders_description": ad[i].BehavioralDisordersDescription,
+            "city": ad[i].CityName,
+            "publisher_id": ad[i].PublisherID,
+            "modified_date": ad[i].ModifiedDate,
+            "due_date": ad[i].DueDate,
+            "is_active": (ad[i].ActiveStatus == 1),
+            "photos": photos
+        }
+        ads.push(advertisement);
+    }
+    return ads;
+}
+
+async function selectFilteredAdvertisements(filters) {
+    const ads = [];
+    const q1 = `SELECT AdvertisementID, Title, AnimalType, Sex, Size, Age, Color, Breed, CostOfLiving,
+        Description, Vaccines, Allergies, Parasites, HealthStatus, IllnessDescription, BehavioralDisorders,
+        BehavioralDisordersDescription, CityName, PublisherID, ModifiedDate, DueDate, ActiveStatus
+        FROM Advertisement LEFT JOIN City ON (Advertisement.CityID = City.CityID)
+        WHERE ${filters};`;
+    let ad = await db.query(q1);
+    if (ad.length == undefined) ad = [ad];
+    for (let i = 0; i < ad.length; i++) {
+        const q2 = `SELECT Photo FROM AdvertisementPhoto WHERE (AdvertisementID = ${db.escape(ad[i].AdvertisementID)});`;
+        const p = await db.query(q2);
+        const photos = []
+        if (p.length == undefined) {
+            photos.push(p.Photo);
+        } else {
+            for (let j = 0; j < p.length; j++) {
+                photos.push(p[j].Photo);
+            }
+        }
+        const advertisement = {
+            "id": ad[i].AdvertisementID,
+            "title": ad[i].Title,
+            "animal_type": ad[i].AnimalType,
+            "sex": ad[i].Sex,
+            "size": ad[i].Size,
+            "age": ad[i].Age,
+            "color": ad[i].Color,
+            "breed": ad[i].Breed,
+            "cost_of_living": ad[i].CostOfLiving,
+            "description": ad[i].Description,
+            "vaccines": ad[i].Vaccines,
+            "allergies": ad[i].Allergies,
+            "parasites": ad[i].Parasites,
+            "health_status": ad[i].HealthStatus,
+            "illness_description": ad[i].IllnessDescription,
+            "behavioral_disorders": (ad[i].BehavioralDisorders == 1),
             "behavioral_disorders_description": ad[i].BehavioralDisordersDescription,
             "city": ad[i].CityName,
             "publisher_id": ad[i].PublisherID,
@@ -160,7 +210,7 @@ async function updateAdvertisement(id, ad) {
 
 async function updateAdvertisementPhotos(id, photos) {
     const q = `DELETE FROM AdvertisementPhoto WHERE (AdvertisementPhotoID = ${db.escape(id)});`;
-    const result = await db.query(q);
+    const result = db.query(q);
     result.then(await insertAdvertisementPhotos(id, photos));
 }
 
@@ -181,9 +231,34 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-//add queries
 router.get('/', async (req, res) => {
     try {
+        if (!(Object.keys(req.query).length === 0 && req.query.constructor === Object)) {
+            console.log("wtf");
+            const params = [];
+            let paramsString = '';
+            let age = req.query.Age;
+            if (req.query.Age == "Mlody") age = "Młody";
+            if (req.query.Age == "Dorosly") age = "Dorosły";
+            let size = req.query.Size;
+            if (req.query.Size == "Maly") size = "Mały";
+            if (req.query.Size == "Sredni") size = "Średni";
+            if (req.query.Size == "Duzy") size = "Duży";
+            if (req.query.AnimalType != undefined) params.push(`AnimalType = '${req.query.AnimalType}'`);
+            if (req.query.Sex != undefined) params.push(`Sex = '${req.query.Sex}'`);
+            if (req.query.City != undefined) params.push(`City = '${req.query.City}'`);
+            if (req.query.Age != undefined) params.push(`Age = '${age}'`);
+            if (req.query.Size != undefined) params.push(`Size = '${size}'`);
+            if (req.query.HealthStatus != undefined) params.push(`HealthStatus = '${req.query.HealthStatus}'`);
+            for (let i = 0; i < params.length; i++) {
+                paramsString += params[i];
+                if (i != params.length - 1) paramsString += ' AND ';
+            }
+
+            const advertisements = await selectFilteredAdvertisements(paramsString);
+            return res.json(advertisements);
+        }
+
         const advertisements = await selectAdvertisements();
         res.json(advertisements);
     } catch (err) {
@@ -248,7 +323,8 @@ router.delete('/:id', auth, async (req, res) => {
         const publisherId = await getPublisherId(req.params.id);
         if (id != publisherId) return res.status(403).send(`Forbidden. Cannot delete unauthorised user's advertisement.`);
         await setAdvertisementInactive(id);
-        res.json(user);
+        const ad = await selectAdvertisement(req.params.id)
+        res.json(ad);
     } catch (err) {
         console.error(err.message);
         res.status(500).send(`Internal Server Error`);
