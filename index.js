@@ -28,7 +28,7 @@ app.use('/zpi/api/login', login);
 app.use('/zpi/api/user', user);
 app.use('/zpi/api/advertisement', advertisement);
 //app.use('/zpi/api/violation', violation);
-//app.use('/zpi/api/bookmarks', bookmarks);
+app.use('/zpi/api/bookmarks', bookmarks);
 app.use('/zpi/api/cities', cities);
 
 if (!config.get('mysqldb.password') || !config.get('jwtPrivateKey')) {

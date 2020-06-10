@@ -1,6 +1,3 @@
-const crypto = require('crypto');
-const config = require('config');
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 
@@ -99,7 +96,7 @@ async function selectAdvertisement(id) {
 }
 
 async function selectAdvertisements() {
-    const users = [];
+    const ads = [];
     const q1 = `SELECT AdvertisementID, Title, AnimalType, Sex, Size, Age, Color, Breed, CostOfLiving,
         Description, Vaccines, Allergies, Parasites, HealthStatus, IllnessDescription, BehavioralDisorders,
         BehavioralDisordersDescription, CityName, PublisherID, ModifiedDate, DueDate, ActiveStatus
@@ -118,7 +115,7 @@ async function selectAdvertisements() {
                 photos.push(p[j].Photo);
             }
         }
-        const user = {
+        const advertisement = {
             "id": ad[i].AdvertisementID,
             "title": ad[i].Title,
             "animal_type": ad[i].AnimalType,
@@ -143,9 +140,9 @@ async function selectAdvertisements() {
             "is_active": (ad[i].ActiveStatus == 1),
             "photos": photos
         }
-        users.push(user);
+        ads.push(advertisement);
     }
-    return users;
+    return ads;
 }
 
 async function updateAdvertisement(id, ad) {
@@ -223,7 +220,7 @@ router.put('/:id', auth, async (req, res) => {
         if (!exists) return res.status(404).send(`Advertisement with the given id was not found.`);
         const id = req.user._id;
         const publisherId = await getPublisherId(req.params.id);
-        if (id != publisherId) return res.status(403).send(`Forbidden. Cannot update unauthorised user's advertisment.`);
+        if (id != publisherId) return res.status(403).send(`Forbidden. Cannot update unauthorised user's advertisement.`);
         const cityExists = await doesCityExist(req.body.city);
         if (req.body.city != null && !cityExists) return res.status(400).send(`City ${req.body.city} does not exist.`);
         const ad = req.body;
@@ -249,7 +246,7 @@ router.delete('/:id', auth, async (req, res) => {
         if (!exists) return res.status(404).send(`Advertisement with the given id was not found.`);
         const id = req.user._id;
         const publisherId = await getPublisherId(req.params.id);
-        if (id != publisherId) return res.status(403).send(`Forbidden. Cannot delete unauthorised user's advertisment.`);
+        if (id != publisherId) return res.status(403).send(`Forbidden. Cannot delete unauthorised user's advertisement.`);
         await setAdvertisementInactive(id);
         res.json(user);
     } catch (err) {

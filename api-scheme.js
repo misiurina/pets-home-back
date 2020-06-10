@@ -474,13 +474,13 @@ POST = {
             "x-auth-token": "JWT"
         },
         body: {
-            advertisement: "Integer"
+            advertisement_id: "Integer"
         }
     },
     response: {
         body: {
-            id: "Integer",
-            advertisement: "Integer"
+            user_id: "Integer",
+            advertisement_id: "Integer"
         }
     },
     errors: {
@@ -502,19 +502,16 @@ DELETE = {
     },
     response: {
         body: {
-            id: "Integer",
-            advertisement: "Integer"
+            user_id: "Integer",
+            advertisement_id: "Integer"
         }
     },
     errors: {
         401: [
             "Unauthorized"
         ],
-        403: [
-            "Forbidden"
-        ],
         404: [
-            "Advertisement with the given id was not found"
+            "This advertisement was not bookmarked"
         ]
     }
 }
