@@ -28,7 +28,8 @@ async function query(query) {
             if (err) {
                 return reject(new Error(`Could not execute ${query}:\n${err.message}`));
             } else {
-                return resolve(results);
+                if (results.length != undefined && results.length == 1) return resolve(results[0]);
+                else return resolve(results);
             }
         });
     });

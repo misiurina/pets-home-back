@@ -7,19 +7,25 @@ const express = require('express');
 const registration = require('./routes/registration');
 const login = require('./routes/login');
 const user = require('./routes/user');
-const advertisment = require('./routes/advertisment');
+const advertisement = require('./routes/advertisement');
 const violation = require('./routes/violation');
 const bookmarks = require('./routes/bookmarks');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    exposedHeaders: 'x-auth-token'
+}));
 app.use(express.json());
+app.use((req, res, next) => {
+    console.log(req.body);
+    next();
+});
 app.use(cookieParser());
 
 app.use('/zpi/api/registration', registration);
 app.use('/zpi/api/login', login);
 app.use('/zpi/api/user', user);
-//app.use('/zpi/api/advertisment', advertisment);
+app.use('/zpi/api/advertisement', advertisement);
 //app.use('/zpi/api/violation', violation);
 //app.use('/zpi/api/bookmarks', bookmarks);
 

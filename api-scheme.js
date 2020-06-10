@@ -188,7 +188,7 @@ DELETE = {
 //USUNIĘCIE OGŁOSZENIA
 GET = {
     request: {
-        uri: "zpi/api/advertisment/:id",
+        uri: "zpi/api/advertisement/:id",
         headers: {
             "x-auth-token": "JWT"
         }
@@ -200,7 +200,7 @@ GET = {
             animal_type: "String",
             sex: "String",
             size: "String",
-            age_in_days: "Integer",
+            age: "String",
             color: "String",
             breed: "String",
             cost_of_living: "String",
@@ -231,7 +231,7 @@ GET = {
 }
 POST = {
     request: {
-        uri: "zpi/api/advertisment",
+        uri: "zpi/api/advertisement",
         headers: {
             "Content-Type": "application/json",
             "x-auth-token": "JWT"
@@ -241,7 +241,7 @@ POST = {
             animal_type: "String",
             sex: "String",
             size: "String",
-            age_in_days: "Integer",
+            age: "String",
             color: "String",
             breed: "String",
             cost_of_living: "String",
@@ -264,7 +264,7 @@ POST = {
             animal_type: "String",
             sex: "String",
             size: "String",
-            age_in_days: "Integer",
+            age: "String",
             color: "String",
             breed: "String",
             cost_of_living: "String",
@@ -295,7 +295,7 @@ POST = {
 }
 PUT = {
     request: {
-        uri: "zpi/api/advertisment/:id",
+        uri: "zpi/api/advertisement/:id",
         headers: {
             "Content-Type": "application/json",
             "x-auth-token": "JWT"
@@ -305,7 +305,7 @@ PUT = {
             animal_type: "String",
             sex: "String",
             size: "String",
-            age_in_days: "Integer",
+            age: "String",
             color: "String",
             breed: "String",
             cost_of_living: "String",
@@ -328,7 +328,7 @@ PUT = {
             animal_type: "String",
             sex: "String",
             size: "String",
-            age_in_days: "Integer",
+            age: "String",
             color: "String",
             breed: "String",
             cost_of_living: "String",
@@ -365,7 +365,7 @@ PUT = {
 }
 DELETE = {
     request: {
-        uri: "zpi/api/advertisment/:id",
+        uri: "zpi/api/advertisement/:id",
         headers: {
             "Content-Type": "application/json",
             "x-auth-token": "JWT"
@@ -378,7 +378,7 @@ DELETE = {
             animal_type: "String",
             sex: "String",
             size: "String",
-            age_in_days: "Integer",
+            age: "String",
             color: "String",
             breed: "String",
             cost_of_living: "String",
@@ -406,7 +406,7 @@ DELETE = {
             "Forbidden"
         ],
         404: [
-            "Advertisment with the given id was not found"
+            "advertisement with the given id was not found"
         ]
     }
 }
@@ -422,7 +422,7 @@ POST = {
             "x-auth-token": "JWT"
         },
         body: {
-            advertisment: "Integer",
+            advertisement: "Integer",
             reason: "String",
             comment: "String",
         }
@@ -431,7 +431,7 @@ POST = {
         body: {
             id: "Integer",
             reporter: "Integer",
-            advertisment: "Integer",
+            advertisement: "Integer",
             reason: "String",
             comment: "String",
             status: "String"
@@ -458,7 +458,7 @@ GET = {
         }
     },
     response: {
-        body: "Advertisment[]"
+        body: "Advertisement[]"
     },
     errors: {
         401: [
@@ -474,13 +474,13 @@ POST = {
             "x-auth-token": "JWT"
         },
         body: {
-            advertisment: "Integer"
+            advertisement: "Integer"
         }
     },
     response: {
         body: {
             id: "Integer",
-            advertisment: "Integer"
+            advertisement: "Integer"
         }
     },
     errors: {
@@ -503,7 +503,7 @@ DELETE = {
     response: {
         body: {
             id: "Integer",
-            advertisment: "Integer"
+            advertisement: "Integer"
         }
     },
     errors: {
@@ -514,7 +514,7 @@ DELETE = {
             "Forbidden"
         ],
         404: [
-            "Advertisment with the given id was not found"
+            "Advertisement with the given id was not found"
         ]
     }
 }
@@ -523,24 +523,34 @@ DELETE = {
 //WYSZUKIWANIE OGŁOSZEŃ
 GET = {
     request: {
-        uri: "zpi/api/advertisment",
+        uri: "zpi/api/advertisement",
         headers: {
             "x-auth-token": "JWT"
         }
     },
     response: {
-        body: "Advertisment[]"
+        body: "Advertisement[]"
     }
 }
 
 GET = {
     request: {
-        uri: "zpi/api/advertisment?query",
+        uri: "zpi/api/advertisement?query",
         headers: {
             "x-auth-token": "JWT"
         }
     },
     response: {
-        body: "Advertisment[]"
+        body: "Advertisement[]"
+    }
+}
+
+//LISTA MIAST
+GET = {
+    request: {
+        uri: "zpi/api/cities"
+    },
+    response: {
+        body: "String[]"
     }
 }

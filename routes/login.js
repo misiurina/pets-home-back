@@ -11,14 +11,14 @@ async function validateCredentials(email, password) {
     const result1 = await db.query(q1);
     let count;
     let salt;
-    count = (result1.length == undefined) ? result1.Count : result1[0].Count;
-    salt = (result1.length == undefined) ? result1.Salt : result1[0].Salt;
+    count = result1.Count;
+    salt = result1.Salt;
     if (count == 0) return false;
     
     const hash = crypto.createHash('sha256').update(password + salt).digest('hex');
     const q2 = `SELECT COUNT(*) \`Count\` FROM \`User\` WHERE (Email = ${db.escape(email)}) AND (Password = ${db.escape(hash)});`;
     const result2 = await db.query(q2);
-    count = (result2.length == undefined) ? result2.Count : result2[0].Count;
+    count = result2.Count;
     return count > 0;
 }
 
@@ -28,7 +28,6 @@ async function selectUser(email) {
         ON (\`User\`.CityID = City.CityID)
         WHERE (Email = ${db.escape(email)});`;
     let result = await db.query(q);
-    if (result.length != undefined) result = result[0];
     return {
         "id": result.UserID,
         "name": result.Name,
@@ -54,7 +53,7 @@ router.post('/', async (req, res) => {
         const user = await selectUser(req.body.email);
         console.log(res.cookies);
         const authToken = jwt.sign({ _id: user.id }, config.get('jwtPrivateKey'));
-        res.cookie('AuthToken', authToken).json(user);
+        res.header('x-auth-token', authToken).cookie('AuthToken', authToken).json(user);
         console.log(req.cookies);
     } catch (err) {
         console.error(err.message);

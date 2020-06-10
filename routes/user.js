@@ -7,23 +7,22 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const db = require('../utils/database');
 
-async function doesCityExist(id) {
-    const q = `SELECT COUNT(*) Cnt FROM City WHERE (CityID = ${db.escape(id)});`;
+async function doesCityExist(name) {
+    const q = `SELECT COUNT(*) Cnt FROM City WHERE (CityName = ${db.escape(name)});`;
+    const result = await db.query(q);
+    return result.Cnt > 0;
 }
 
 async function getCityId(name) {
     const q = `SELECT CityID FROM City WHERE (CityName = ${db.escape(name)});`;
-    console.log(db.escape(name));
     const result = await db.query(q);
-    console.log(result);
-    return (result.length == undefined) ? result.CityID : result[0].CityID;
+    return result.CityID;
 }
 
 async function doesUserExist(id) {
     const q = `SELECT COUNT(*) Cnt FROM \`User\` WHERE (UserID = ${db.escape(id)});`;
     const result = await db.query(q);
-    const cnt = (result.length == undefined) ? result.Cnt : result[0].Cnt;
-    return cnt > 0;
+    return result.Cnt > 0;
 }
 
 async function selectUser(id) {
@@ -32,7 +31,6 @@ async function selectUser(id) {
         ON (\`User\`.CityID = City.CityID)
         WHERE (UserID = ${db.escape(id)});`;
     let result = await db.query(q);
-    if (result.length != undefined) result = result[0];
     return {
         "id": result.UserID,
         "name": result.Name,
@@ -76,13 +74,15 @@ router.get('/:id', auth, async (req, res) => {
     }
 });
 
-// check city existence
+// test nulles
 router.put('/:id', auth, async (req, res) => {
     try {
         const id = (req.params.id == 'me') ? req.user._id : parseInt(req.params.id);
         if (id != req.user._id) return res.status(403).send(`Forbidden. Cannot update unauthorised user.`);
-        const exists = await doesUserExist(id);
-        if (!exists) return res.status(404).send(`User with the given id was not found.`);
+        const userExists = await doesUserExist(id);
+        if (!userExists) return res.status(404).send(`User with the given id was not found.`);
+        const cityExists = await doesCityExist(req.body.city);
+        if (req.body.city != null && !cityExists) return res.status(400).send(`City ${req.body.city} does not exist.`);
         await updateUser(id, req.body);
         const user = req.body;
         user.id = id;
@@ -93,7 +93,6 @@ router.put('/:id', auth, async (req, res) => {
     }
 });
 
-// to test
 router.delete('/:id', auth, async (req, res) => {
     try {
         const id = (req.params.id == 'me') ? req.user._id : parseInt(req.params.id);

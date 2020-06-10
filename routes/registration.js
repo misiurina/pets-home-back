@@ -9,13 +9,7 @@ const db = require('../utils/database');
 async function isEmailTaken(email) {
     const q = `SELECT COUNT(*) \`Count\` FROM \`User\` WHERE (Email = ${db.escape(email)});`;
     const result = await db.query(q);
-    let count;
-    if (result.length == undefined) {
-        count = result.Count;
-    } else {
-        count = result[0].Count;
-    }
-    return count > 0;
+    return result.Count;
 }
 
 async function insertUser(user) {
@@ -32,22 +26,14 @@ router.post('/', async (req, res) => {
             res.status(400).send(`Email ${req.body.email} is already in use.`);
         } else {
             const result = await insertUser(req.body);
-            let id;
-
-            if (result.length == undefined) {
-                id = result.insertId;
-            } else {
-                id = result[0].insertId;
-            }
-
             user = {
-                "id": id,
+                "id": result.id,
                 "name": req.body.name,
                 "email": req.body.email
             }
 
-            const authToken = jwt.sign({ _id: id }, config.get('jwtPrivateKey'));
-            return res.cookie('AuthToken', authToken).json(user);
+            const authToken = jwt.sign({ _id: result.id }, config.get('jwtPrivateKey'));
+            return res.header('x-auth-token', authToken).cookie('AuthToken', authToken).json(user);
         }
     } catch (err) {
         console.error(err.message);
