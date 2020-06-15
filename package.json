@@ -2,7 +2,7 @@
   "name": "pets-home-back",
   "version": "1.0.0",
   "description": "PWr W8 ZPI project for letting people to find pets for adoption and pets to find home. Back end server.",
-  "main": "index.js",
+  "main": "pets_home_back.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

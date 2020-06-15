@@ -4,8 +4,14 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const db = require('../utils/database');
 
+async function doesAdvertisementExist(id) {
+    const q = `SELECT COUNT(*) Cnt FROM Advertisement WHERE (AdvertisementID = ${db.escape(id)});`;
+    const result = await db.query(q);
+    return result.Cnt > 0;
+}
+
 async function doesBookmarkExist(userId, adId) {
-    const q = `SELECT COUNT(*) Cnt FROM \`User\` WHERE (UserID = ${db.escape(id)});`;
+    const q = `SELECT COUNT(*) Cnt FROM Bookmark WHERE (UserID = ${db.escape(userId)} AND AdvertisementID = ${db.escape(adId)});`;
     const result = await db.query(q);
     return result.Cnt > 0;
 }
@@ -17,7 +23,7 @@ async function insertBookmark(userId, adId) {
 
 async function selectBookmarkedAdvertisements(publisherId) {
     const ads = [];
-    const q1 = `SELECT AdvertisementID, Title, AnimalType, Sex, Size, Age, Color, Breed, CostOfLiving,
+    const q1 = `SELECT A.AdvertisementID, Title, AnimalType, Sex, Size, Age, Color, Breed, CostOfLiving,
         Description, Vaccines, Allergies, Parasites, HealthStatus, IllnessDescription, BehavioralDisorders,
         BehavioralDisordersDescription, CityName, PublisherID, ModifiedDate, DueDate, ActiveStatus
         FROM Advertisement A
@@ -88,8 +94,10 @@ router.post('/', auth, async (req, res) => {
     try {
         const bookmark = req.body;
         const id = req.user._id;
-        const exists = doesBookmarkExist(id, bookmark.advertisement_id);
-        if (exists) return res.json({ "user_id": id, "advertisement_id": bookmark.advertisement_id });
+        const aExists = await doesAdvertisementExist(bookmark.advertisement_id);
+        if (!aExists) return res.status(400).send("Advertisement with the given id does not exist");
+        const bExists = await doesBookmarkExist(id, bookmark.advertisement_id);
+        if (bExists) return res.json({ "user_id": id, "advertisement_id": bookmark.advertisement_id });
         await insertBookmark(id, bookmark.advertisement_id);
         bookmark.user_id = id;
         res.json(bookmark);

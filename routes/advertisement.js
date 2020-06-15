@@ -246,7 +246,7 @@ router.get('/', async (req, res) => {
             if (req.query.Size == "Duzy") size = "Duży";
             if (req.query.AnimalType != undefined) params.push(`AnimalType = '${req.query.AnimalType}'`);
             if (req.query.Sex != undefined) params.push(`Sex = '${req.query.Sex}'`);
-            if (req.query.City != undefined) params.push(`City = '${req.query.City}'`);
+            if (req.query.City != undefined) params.push(`CityName = '${req.query.City}'`);
             if (req.query.Age != undefined) params.push(`Age = '${age}'`);
             if (req.query.Size != undefined) params.push(`Size = '${size}'`);
             if (req.query.HealthStatus != undefined) params.push(`HealthStatus = '${req.query.HealthStatus}'`);

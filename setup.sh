@@ -1,0 +1,4 @@
+export NODE_ENV=production
+export ZPI_mysqlPassword=ZPIPetsHome
+export ZPI_jwtPrivateKey=ZPIPetsHome
+export ZPI_PORT=3102
